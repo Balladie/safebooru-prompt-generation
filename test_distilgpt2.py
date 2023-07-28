@@ -2,6 +2,8 @@ import torch
 
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 
+from utils import parse_args_test
+
 
 def get_generation_config():
     generation_config = GenerationConfig(
@@ -19,19 +21,16 @@ def get_generation_config():
 
 
 if __name__ == '__main__':
-    model_dir = '/home/gangin/workspace/da-studio/diffusion/distilgpt2-prompt-gen/runs/run-20230714_185536-gwmq1w9o/checkpoint-12000'
-    # model_dir = '/home/gangin/workspace/da-studio/diffusion/distilgpt2-prompt-gen/runs/run-20230721_160802-hxuibjun/checkpoint-6400'
-    
-    text_input = 'sks man, masterpiece, best quality, lineart, monochrome, solo, playing guitar'
+    args = parse_args_test()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     generation_config = get_generation_config()
 
     tokenizer = AutoTokenizer.from_pretrained('distilgpt2')
-    tokenized = tokenizer(text_input, return_tensors='pt')
+    tokenized = tokenizer(args.text, return_tensors='pt')
 
-    model = AutoModelForCausalLM.from_pretrained(model_dir)
+    model = AutoModelForCausalLM.from_pretrained(args.model_dir)
     outputs = model.generate(**tokenized, generation_config=generation_config)
 
     for output in outputs:

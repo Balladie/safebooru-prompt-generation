@@ -16,6 +16,15 @@ def parse_args():
     return parser.parse_args()
 
 
+def parse_args_test():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--model_dir', type=str, required=True)
+    parser.add_argument('--text', type=str, required=True)
+
+    return parser.parse_args()
+
+
 def get_logger():
     logger = logging.getLogger(__name__)
 

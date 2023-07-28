@@ -46,13 +46,13 @@ if __name__ == '__main__':
     test_dataset = AnimePromptsDataset(test_texts, tokenizer)
 
     # load model
-    model = AutoModelForCausalLM.from_pretrained('EleutherAI/gpt-j-6B')
+    model = AutoModelForCausalLM.from_pretrained('EleutherAI/gpt-j-6B', torch_dtype=torch.float16, low_cpu_mem_usage=True)
 
     # PEFT config
     peft_config = LoraConfig(
         task_type='CAUSAL_LM', 
         inference_mode=False, 
-        r=32, 
+        r=8, 
         lora_alpha=32,
     )
 
@@ -65,15 +65,15 @@ if __name__ == '__main__':
         output_dir="runs", #The output directory
         overwrite_output_dir=True, #overwrite the content of the output directory
         num_train_epochs=3, # number of training epochs
-        per_device_train_batch_size=4, # batch size for training
-        per_device_eval_batch_size=4,  # batch size for evaluation
+        per_device_train_batch_size=2, # batch size for training
+        per_device_eval_batch_size=2,  # batch size for evaluation
         save_strategy='steps',
         save_steps=2000, # after # steps model is saved 
         warmup_steps=1000,# number of warmup steps for learning rate scheduler
         learning_rate=5e-5,
         evaluation_strategy='steps',
         eval_steps=2000,
-        # fp16=True,
+        fp16=True,
         # prediction_loss_only=True,
     )
 
